@@ -1,8 +1,8 @@
-import React from 'react'
 
 const Form = () => {
+  const x=1;
   return (
-    <div className='bg-red-300 max-w-[1280px] mx-auto py-10'>
+    <div className='bg-red-300 max-w-[1280px] py-10 mx-auto'>
         <div className='text-center text-inter text-3xl font-semibold'>
             <p>Contact Information</p>
         </div>
@@ -16,12 +16,14 @@ const Form = () => {
                 <label htmlFor="">Last Name:</label>
                 <input type="text" name="" id="" className='border border-black rounded-md p-1 ml-1 focus:outline-none'/>
             </div>
-           <div>
+            <div>
                 <label htmlFor="">Mail:</label>
                 <input type="mail" name="" id="" className='border border-black rounded-md p-1 ml-1 focus:outline-none'/>
-           </div>
+            </div>
+        <a href="#" className='p-2 border border-black rounded-lg'>
+              <button>Submit</button>
+            </a>
         </div>
-       
     </div>
   )
 }
