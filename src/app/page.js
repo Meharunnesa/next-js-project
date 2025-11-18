@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Form from "./components/Form";
+import AddForm from './components/AddForm';
 
 export default function Home() {
   return (
@@ -63,7 +62,8 @@ export default function Home() {
     //   </main>
     // </div>
     <>
-     <Form/>
+     {/* <AddForm/> */}
+     <AddForm/>
     </>
   );
 }

@@ -9,12 +9,15 @@ export default defineConfig([
     files: ["src/**/*.{js,jsx,ts,tsx}"],
   })),
 
-  // Prettier integration
+  // Prettier
   {
     files: ["src/**/*.{js,jsx,ts,tsx}"],
     ...prettierConfig,
     rules: {
-      ...prettierConfig.rules, // enable Prettier formatting as ESLint rules
+      ...prettierConfig.rules,
+      "no-unused-vars": "error",
+      "semi": ["error", "always"],
+      "quotes": ["error", "single"], 
     },
   },
 
