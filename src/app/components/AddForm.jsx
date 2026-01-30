@@ -17,7 +17,9 @@ export default function AddForm() {
 
   const form = useForm({
     defaultValues: {
-      username: ''
+      firstname: '',
+      lastname: '',
+      passowrd: '',
     }
   });
 
@@ -32,19 +34,44 @@ export default function AddForm() {
 
           <FormField
             control={form.control}
-            name="username"
+            name="firstname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
-
+                <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="Enter your first name" {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
+          <FormField
+            control={form.control}
+            name="lastname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your last name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="password"
+                    placeholder="Enter your password" {...field}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
