@@ -2,30 +2,48 @@
 
 import { Button } from '@/components/ui/button';
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function AddForm() {
-
   const form = useForm({
     defaultValues: {
       firstname: '',
       lastname: '',
-      passowrd: '',
-    }
+      email: '',
+      password: '',
+    },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (data) => {
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: `${data.firstname} ${data.lastname}`,
+          email: data.email,
+        }),
+      });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      form.reset();
+    },
+  });
+
+  const onSubmit = (data) => mutation.mutate(data);
 
   return (
     <div className="max-w-[1280px] py-10 mx-auto">
@@ -81,17 +99,16 @@ export default function AddForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="password"
-                    placeholder="Enter your password" {...field}
-                  />
+                  <Input type="password" placeholder="Enter your password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={mutation.isLoading}>
+            {mutation.isLoading ? 'Saving...' : 'Submit'}
+          </Button>
         </form>
       </Form>
     </div>
