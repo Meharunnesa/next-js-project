@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-// TEMP DATA STORAGE (replace with DB later)
+// TEMP DATA STORAGE
 let USERS = [];
 
 export async function GET() {
@@ -19,4 +19,3 @@ export async function POST(request) {
 
   return NextResponse.json(newUser, { status: 201 });
 }
-

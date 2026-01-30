@@ -1,3 +1,5 @@
+'use client';
+
 import AddForm from './components/AddForm';
 import UsersList from './components/UsersList';
 
