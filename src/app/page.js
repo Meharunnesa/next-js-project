@@ -6,7 +6,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold">User Management</h1>
 
       <div className="space-x-4">
-        <Link href="/form" className="underline text-blue-600">
+        <Link href="/form" className="underline text-blue-600 p-4 bg-gray-200 border border-[#f6f6f6]">
           Add User
         </Link>
         <Link href="/users" className="underline text-blue-600">

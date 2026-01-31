@@ -1,4 +1,4 @@
-// app/layout.js  (Server Component)
+import './globals.css';
 import ClientProvider from './components/ClientProvider';
 
 export const metadata = {
