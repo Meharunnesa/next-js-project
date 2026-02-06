@@ -5,8 +5,7 @@ import path from 'path';
 const filePath = path.join(process.cwd(), 'src/data/users.json');
 
 function readUsers() {
-  const data = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(data);
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 function writeUsers(users) {
@@ -14,8 +13,7 @@ function writeUsers(users) {
 }
 
 export async function GET() {
-  const users = readUsers();
-  return NextResponse.json(users);
+  return NextResponse.json(readUsers());
 }
 
 export async function POST(request) {

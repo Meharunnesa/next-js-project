@@ -5,8 +5,7 @@ import path from 'path';
 const filePath = path.join(process.cwd(), 'src/data/users.json');
 
 function readUsers() {
-  const data = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(data);
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 function writeUsers(users) {
@@ -14,26 +13,24 @@ function writeUsers(users) {
 }
 
 export async function PUT(request, { params }) {
+  console.log('PUT hit for user id:', params.id); // debug
   const { id } = params;
   const body = await request.json();
 
   const users = readUsers();
-  const userIndex = users.findIndex((u) => u.id === id);
+  const index = users.findIndex((u) => u.id === id);
 
-  if (userIndex === -1) {
-    return NextResponse.json(
-      { message: 'User not found' },
-      { status: 404 }
-    );
+  if (index === -1) {
+    return NextResponse.json({ message: 'User not found' }, { status: 404 });
   }
 
-  users[userIndex] = {
-    ...users[userIndex],
+  users[index] = {
+    ...users[index],
     username: body.username,
     email: body.email,
   };
 
   writeUsers(users);
 
-  return NextResponse.json(users[userIndex]);
+  return NextResponse.json(users[index]);
 }
