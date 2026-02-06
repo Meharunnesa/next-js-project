@@ -1,8 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+import EditUserForm from './EditUserForm';
 import { useQuery } from '@tanstack/react-query';
 
 export default function UsersList() {
+
+  const [editingUser, setEditingUser] = useState(null);
+
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -52,7 +57,13 @@ export default function UsersList() {
                   {new Date(user.createdAt).toLocaleString()}
                 </td>
                 <td className="p-3 border-b space-x-2">
-                  <button className="text-blue-600 hover:underline">
+                  {/* <button className="text-blue-600 hover:underline">
+                    Edit
+                  </button> */}
+                  <button
+                    onClick={() => setEditingUser(user)}
+                    className="text-blue-600 hover:underline"
+                  >
                     Edit
                   </button>
                   <button className="text-red-600 hover:underline">
@@ -64,6 +75,18 @@ export default function UsersList() {
           )}
         </tbody>
       </table>
+      {editingUser && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-md rounded-lg p-6">
+            <h2 className="text-xl font-bold mb-4">Edit User</h2>
+
+            <EditUserForm
+              user={editingUser}
+              onClose={() => setEditingUser(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
