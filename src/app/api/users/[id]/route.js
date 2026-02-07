@@ -1,3 +1,4 @@
+// src/app/api/users/[id]/route.js
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -12,22 +13,23 @@ function writeUsers(users) {
   fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
 }
 
-export async function PUT(request, { params }) {
-  console.log('PUT hit for user id:', params.id); // debug
+export async function PUT(req, { params }) {
   const { id } = params;
-  const body = await request.json();
+  const body = await req.json();
 
   const users = readUsers();
-  const index = users.findIndex((u) => u.id === id);
 
+  const index = users.findIndex(u => u.id === id); // Use strict equality
   if (index === -1) {
-    return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    return NextResponse.json(
+      { message: 'User not found' },
+      { status: 404 }
+    );
   }
 
   users[index] = {
     ...users[index],
-    username: body.username,
-    email: body.email,
+    ...body,
   };
 
   writeUsers(users);
