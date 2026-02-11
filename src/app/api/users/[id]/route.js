@@ -7,10 +7,6 @@ import path from 'path';
 const filePath = path.join(process.cwd(), 'src/data/users.json');
 
 function readUsers() {
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-
   const data = fs.readFileSync(filePath, 'utf8');
   return data ? JSON.parse(data) : [];
 }
@@ -21,20 +17,18 @@ function writeUsers(users) {
 
 export async function PUT(req, { params }) {
   try {
-    const id = params.id;
+    const id = String(params.id).trim(); // ✅ convert to string
     const body = await req.json();
 
     const users = readUsers();
 
-    const index = users.findIndex(
-      (u) => u.id === id
-    );
+    console.log("PUT called with ID:", id);
+    console.log("All User IDs:", users.map(u => u.id));
+
+    const index = users.findIndex(u => String(u.id).trim() === id); // ✅ convert to string
 
     if (index === -1) {
-      return NextResponse.json(
-        { message: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
     users[index] = {
@@ -45,12 +39,10 @@ export async function PUT(req, { params }) {
     writeUsers(users);
 
     return NextResponse.json(users[index], { status: 200 });
-
   } catch (error) {
-    console.error('PUT CRASH:', error);
-
+    console.error('PUT ERROR:', error);
     return NextResponse.json(
-      { message: error.message || 'Internal Server Error' },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }
