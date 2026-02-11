@@ -10,6 +10,19 @@ export default function EditUserForm({ user, onClose }) {
   const [email, setEmail] = useState(user.email);
 
 const { mutate, isLoading } = useMutation({
+  // mutationFn: async (updatedUser) => {
+  //   const res = await fetch(`/api/users/${user.id}`, {
+  //     method: 'PUT',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(updatedUser),
+  //   });
+
+  //   if (!res.ok) {
+  //     const error = await res.json();
+  //     throw new Error(error.message || 'Failed to update user');
+  //   }
+  //   return res.json();
+  // },
   mutationFn: async (updatedUser) => {
     const res = await fetch(`/api/users/${user.id}`, {
       method: 'PUT',
@@ -17,19 +30,23 @@ const { mutate, isLoading } = useMutation({
       body: JSON.stringify(updatedUser),
     });
 
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : {};
+
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || 'Failed to update user');
+      throw new Error(data.message || 'Update failed');
     }
-    return res.json();
+
+    return data;
   },
+
   onSuccess: () => {
     queryClient.invalidateQueries(['users']);
     onClose();
   },
   onError: (error) => {
     console.error('Update failed:', error);
-    alert(error.message); // Temporary - to see the error
+    alert(error.message); 
   },
 });
 

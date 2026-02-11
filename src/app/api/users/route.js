@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
+
 import fs from 'fs';
+import { NextResponse } from 'next/server';
 import path from 'path';
 
 const filePath = path.join(process.cwd(), 'src/data/users.json');
