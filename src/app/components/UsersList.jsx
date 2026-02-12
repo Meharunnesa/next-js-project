@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import EditUserForm from './EditUserForm';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function UsersList() {
-
   const [editingUser, setEditingUser] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
@@ -16,6 +16,33 @@ export default function UsersList() {
       return res.json();
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (userId) => {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to delete user');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['users']);
+    },
+    onError: (error) => {
+      console.error('Delete failed:', error);
+      alert(error.message);
+    },
+  });
+
+  const handleDelete = (user) => {
+    if (window.confirm(`Are you sure you want to delete ${user.username}?`)) {
+      deleteMutation.mutate(user.id);
+    }
+  };
 
   if (isLoading) {
     return <p className="text-center py-6">Loading users...</p>;
@@ -57,17 +84,18 @@ export default function UsersList() {
                   {new Date(user.createdAt).toLocaleString()}
                 </td>
                 <td className="p-3 border-b space-x-2">
-                  {/* <button className="text-blue-600 hover:underline">
-                    Edit
-                  </button> */}
                   <button
                     onClick={() => setEditingUser(user)}
                     className="text-blue-600 hover:underline"
                   >
                     Edit
                   </button>
-                  <button className="text-red-600 hover:underline">
-                    Delete
+                  <button
+                    onClick={() => handleDelete(user)}
+                    disabled={deleteMutation.isLoading}
+                    className="text-red-600 hover:underline disabled:opacity-50"
+                  >
+                    {deleteMutation.isLoading ? 'Deleting...' : 'Delete'}
                   </button>
                 </td>
               </tr>
@@ -75,6 +103,7 @@ export default function UsersList() {
           )}
         </tbody>
       </table>
+      
       {editingUser && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white w-full max-w-md rounded-lg p-6">
