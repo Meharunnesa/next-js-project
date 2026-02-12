@@ -17,15 +17,16 @@ function writeUsers(users) {
 
 export async function PUT(req, { params }) {
   try {
-    const id = String(params.id).trim(); // ✅ convert to string
+    const { id } = await params;
+    
     const body = await req.json();
 
     const users = readUsers();
 
-    console.log("PUT called with ID:", id);
-    console.log("All User IDs:", users.map(u => u.id));
+    console.log('PUT called with ID:', id);
+    console.log('All User IDs:', users.map(u => u.id));
 
-    const index = users.findIndex(u => String(u.id).trim() === id); // ✅ convert to string
+    const index = users.findIndex(u => String(u.id) === String(id)); 
 
     if (index === -1) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
